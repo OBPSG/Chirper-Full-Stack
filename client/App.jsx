@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import moment from "moment";
 import ChirpCard from "./components/ChirpCard.jsx";
@@ -6,7 +6,26 @@ import ChirpCard from "./components/ChirpCard.jsx";
 const App = () => {
   const [username, setUsername] = useState("");
   const [message, setMessage] = useState("");
-  const [chirps, setChirps] = useState();
+  const [chirps, setChirps] = useState([]);
+
+  //Retrieve all posts
+  useEffect(() => {
+    fetch("/api/chirps")
+    .then((res) =>  { return res.json()})
+    .then((posts) => {
+      let chirps = [];
+      posts.forEach(post => {
+        chirps.push({
+          id: post.id,
+          username: post.userid,
+          message: post.content,
+          created: post._created
+        })
+      });
+      
+      setChirps(chirps)})
+    .catch((error) => {console.log(error)});
+  }, [])
 
 
   const handleUsernameChange = (e) => setUsername(e.target.value);

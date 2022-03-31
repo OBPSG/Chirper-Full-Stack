@@ -1,12 +1,7 @@
 import * as mysql from "mysql";
+import config from "../config";
 
-const connection = mysql.createConnection({
-    host: 'localhost',
-    port: 3306,
-    database: "c16_chirpr",
-    user: 'chirprapp',
-    password: 'password'
-});
+const connection = mysql.createConnection(config.mysqlConnection);
 
 export const Query = (query, values) => {
     return new Promise((resolve, reject) => {

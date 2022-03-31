@@ -1,12 +1,14 @@
 import * as path from 'path';
 import * as express from 'express';
 import apiRouter from './routes';
+import cors from "cors";
 
 const app = express();
 
 let p = path.join(__dirname, '../public');
 console.log(p);
 
+app.use(cors());
 app.use(express.json());
 app.use(express.static(p));
 app.use("/api", apiRouter);
