@@ -11,21 +11,22 @@ const App = () => {
   //Retrieve all posts
   useEffect(() => {
     fetch("/api/chirps")
-    .then((res) =>  { return res.json()})
-    .then((posts) => {
-      let chirps = [];
-      posts.forEach(post => {
-        chirps.push({
-          id: post.id,
-          username: post.name,
-          message: post.content,
-          created: post._created
-        })
-      });
-      
-      setChirps(chirps)})
-    .catch((error) => {console.log(error)});
-  }, [])
+      .then((res) => { return res.json() })
+      .then((posts) => {
+        let chirps = [];
+        posts.forEach(post => {
+          chirps.push({
+            id: post.id,
+            username: post.name,
+            message: post.content,
+            created: post._created
+          })
+        });
+
+        setChirps(chirps)
+      })
+      .catch((error) => { console.log(error) });
+  }, [chirps])
 
 
   const handleUsernameChange = (e) => setUsername(e.target.value);
@@ -34,13 +35,27 @@ const App = () => {
     e.preventDefault();
 
     const newChirp = {
-      id: uuidv4(),
       username: username,
       message: message,
       created: moment().format("dddd, MMMM Do YYYY, h:mm:ss a"),
+      location: "Online"
     };
 
-    setChirps([...chirps, newChirp]);
+    //Call back-end API method to post new chirp
+    fetch("/api/chirps", {
+      method: "POST",
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(newChirp)
+    })
+      .then((response) => {
+        setChirps([...chirps, newChirp]);
+      })
+      .catch((error) => {
+        alert("Something went wrong with creating the post!");
+        console.log(error);
+      })
   };
 
   return (
@@ -71,8 +86,8 @@ const App = () => {
               />
               <textarea
                 className="form-control mb-2"
-                              aria-label="With textarea"
-                              placeholder="(500 characters max)"
+                aria-label="With textarea"
+                placeholder="(500 characters max)"
                 value={message}
                 onChange={handleMessageChange}
                 cols="30"

@@ -27,7 +27,7 @@ router.post("/", async (req, res) => {
     try {
         const body = req.body;
 
-        const dbRes = await db.chirps.insert(body.userid, body.content, body.location);
+        const dbRes = await db.chirps.insert(body.username, body.message, body.location);
         res.status(200).json(dbRes);
     } catch (error) {
         console.log(error)
