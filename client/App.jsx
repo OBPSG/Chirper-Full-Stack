@@ -17,7 +17,7 @@ const App = () => {
       posts.forEach(post => {
         chirps.push({
           id: post.id,
-          username: post.userid,
+          username: post.name,
           message: post.content,
           created: post._created
         })
